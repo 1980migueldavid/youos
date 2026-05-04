@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
     const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": \`Bearer \${process.env.OPENROUTER_API_KEY}\`,
+        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -16,13 +16,13 @@ export async function POST(req: NextRequest) {
         messages: [
           {
             role: "system",
-            content: \`Classify the user goal into exactly one pillar. Respond ONLY with one word.
+            content: `Classify the user goal into exactly one pillar. Respond ONLY with one word.
 
-growth = business, startup, money, career, income, freelance, self-employment, finance, investing, learning skills, Firma, Unternehmen, Geld, Karriere, Agentur
-health = fitness, weight loss, nutrition, sleep, sport, exercise, body, energy, stress, mental health, Gesundheit, Abnehmen, Sport, Ernährung
-relationships = partner, family, friends, network, communication, social, love, connection, Beziehung, Familie, Freunde, Netzwerk
+growth = business, money, career
+health = fitness, nutrition, sleep
+relationships = family, friends, partner
 
-One word only: growth, health, or relationships\`
+One word only: growth, health, or relationships`
           },
           { role: "user", content: goal }
         ],
