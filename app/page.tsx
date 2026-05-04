@@ -43,24 +43,40 @@ export default function Home() {
   };
 
   return (
-    <main style={{ padding: 20 }}>
-      <h1>YOUos</h1>
+    <main style={{ minHeight:"100vh", display:"flex", flexDirection:"column", padding:"32px 20px", gap:"28px", background:"#000" }}>
+
+      {/* LOGO */}
+      <div style={{ display:"flex", justifyContent:"center" }}>
+        <Image
+          src="/youos-logo.png"
+          alt="YOUos"
+          width={160}
+          height={160}
+        />
+      </div>
+
+      <h1 style={{ color:"#fff", textAlign:"center" }}>
+        DO WHAT YOU SAID TO YOURSELF
+      </h1>
 
       <textarea
         placeholder="Dein Ziel..."
         value={goal}
         onChange={e => setGoal(e.target.value)}
+        style={{ padding:"12px", background:"#111", color:"#fff", border:"1px solid #333" }}
       />
 
       <textarea
         placeholder="Was hast du getan?"
         value={done}
         onChange={e => setDone(e.target.value)}
+        style={{ padding:"12px", background:"#111", color:"#fff", border:"1px solid #333" }}
       />
 
-      <button onClick={start}>
+      <button onClick={start} style={{ padding:"14px", background:"#E85A1A", color:"#fff" }}>
         START
       </button>
+
     </main>
   );
 }
