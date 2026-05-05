@@ -1,5 +1,5 @@
-import { EXECUTE_PROMPT, buildExecuteInput } from "@/lib/prompts/execute";
-import type { Pillar } from "@/lib/prompts/classify";
+import { EXECUTE_PROMPT, buildExecuteInput } from "../../../lib/prompts/execute";
+import type { Pillar } from "../../../lib/prompts/classify";
 
 export async function POST(req: Request) {
   const { goal, pillar } = await req.json() as {
@@ -24,7 +24,10 @@ export async function POST(req: Request) {
 
   const data = await response.json();
 
-  return Response.json({
-    output: data.choices?.[0]?.message?.content || ""
-  });
+  const content =
+    data.choices?.[0]?.message?.content ||
+    data.choices?.[0]?.text ||
+    "";
+
+  return Response.json({ output: content });
 }

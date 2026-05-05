@@ -1,4 +1,4 @@
-import { CLASSIFY_PROMPT, type Pillar } from "@/lib/prompts/classify";
+import { CLASSIFY_PROMPT, type Pillar } from "../../../lib/prompts/classify";
 
 export async function POST(req: Request) {
   const { goal } = await req.json();
@@ -21,7 +21,6 @@ export async function POST(req: Request) {
   const data = await response.json();
   const raw = data.choices?.[0]?.message?.content?.trim().toLowerCase();
 
-  // harte Absicherung
   const pillar: Pillar =
     raw === "business" || raw === "health" || raw === "relationships"
       ? raw
