@@ -2,16 +2,23 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function MenuBar() {
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
 
+  const gradientStyle = {
+    background: "linear-gradient(135deg, #E85A1A, #C0C0C0)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    backgroundClip: "text",
+  };
+
   const iconStyle = (name: string) => ({
     cursor: "pointer",
     fontSize: "20px",
-    transition: "color 0.2s",
+    transition: "all 0.2s",
     color: hoveredIcon === name ? "#E85A1A" : "#F0EDE8",
+    ...(hoveredIcon === name && gradientStyle),
   });
 
   return (
@@ -44,20 +51,22 @@ export default function MenuBar() {
         />
       </Link>
 
-      {/* Icons Container */}
+      {/* Icons Container - Neue Reihenfolge */}
       <div style={{
         display: "flex",
         gap: "24px",
         alignItems: "center",
       }}>
-        {/* Hamburger */}
-        <div
-          style={iconStyle("hamburger")}
-          onMouseEnter={() => setHoveredIcon("hamburger")}
-          onMouseLeave={() => setHoveredIcon(null)}
-        >
-          ☰
-        </div>
+        {/* Profile */}
+        <Link href="/profile" style={{ textDecoration: "none" }}>
+          <div
+            style={iconStyle("profile")}
+            onMouseEnter={() => setHoveredIcon("profile")}
+            onMouseLeave={() => setHoveredIcon(null)}
+          >
+            👤
+          </div>
+        </Link>
 
         {/* Feed */}
         <Link href="/feed" style={{ textDecoration: "none" }}>
@@ -81,16 +90,14 @@ export default function MenuBar() {
           </div>
         </Link>
 
-        {/* Profile */}
-        <Link href="/profile" style={{ textDecoration: "none" }}>
-          <div
-            style={iconStyle("profile")}
-            onMouseEnter={() => setHoveredIcon("profile")}
-            onMouseLeave={() => setHoveredIcon(null)}
-          >
-            👤
-          </div>
-        </Link>
+        {/* Hamburger Menu */}
+        <div
+          style={iconStyle("hamburger")}
+          onMouseEnter={() => setHoveredIcon("hamburger")}
+          onMouseLeave={() => setHoveredIcon(null)}
+        >
+          ☰
+        </div>
       </div>
     </div>
   );
