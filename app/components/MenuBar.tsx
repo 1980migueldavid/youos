@@ -17,8 +17,8 @@ export default function MenuBar() {
     cursor: "pointer",
     fontSize: "20px",
     transition: "all 0.2s",
-    color: hoveredIcon === name ? "#E85A1A" : "#F0EDE8",
-    ...(hoveredIcon === name && gradientStyle),
+    ...gradientStyle,
+    opacity: hoveredIcon === name ? 1 : 0.8,
   });
 
   return (
