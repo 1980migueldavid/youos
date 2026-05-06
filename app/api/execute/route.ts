@@ -1,11 +1,7 @@
-import { EXECUTE_PROMPT, buildExecuteInput } from "../../../lib/prompts/execute";
-import type { Pillar } from "../../../lib/prompts/classify";
+import { EXECUTE_PROMPT } from "../../../lib/prompts/execute";
 
 export async function POST(req: Request) {
-  const { goal, pillar } = await req.json() as {
-    goal: string;
-    pillar: Pillar;
-  };
+  const { goal } = await req.json();
 
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
@@ -17,17 +13,27 @@ export async function POST(req: Request) {
       model: "anthropic/claude-3.5-sonnet",
       messages: [
         { role: "system", content: EXECUTE_PROMPT },
-        { role: "user", content: buildExecuteInput(pillar, goal) }
+        { role: "user", content: goal }
       ]
     })
   });
 
   const data = await response.json();
 
-  const content =
+  const raw =
     data.choices?.[0]?.message?.content ||
     data.choices?.[0]?.text ||
     "";
 
-  return Response.json({ output: content });
+  try {
+    const parsed = JSON.parse(raw);
+    return Response.json(parsed);
+  } catch (e) {
+    return Response.json({
+      goal: "ERROR",
+      reality: "Model did not return valid JSON",
+      today: raw,
+      proof: "Fix prompt"
+    });
+  }
 }
