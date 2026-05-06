@@ -20,20 +20,29 @@ export async function POST(req: Request) {
 
   const data = await response.json();
 
-  const raw =
+  const raw: string =
     data.choices?.[0]?.message?.content ||
     data.choices?.[0]?.text ||
     "";
 
+  // 🔥 JSON extrahieren, selbst wenn Modell Müll drumherum schreibt
+  const match = raw.match(/\{[\s\S]*\}/);
+
   try {
-    const parsed = JSON.parse(raw);
-    return Response.json(parsed);
+    const parsed = JSON.parse(match ? match[0] : raw);
+
+    return Response.json({
+      goal: parsed.goal || "",
+      reality: parsed.reality || "",
+      today: parsed.today || "",
+      proof: parsed.proof || ""
+    });
   } catch (e) {
     return Response.json({
       goal: "ERROR",
       reality: "Model did not return valid JSON",
       today: raw,
-      proof: "Fix prompt"
+      proof: "Fix prompt / model output"
     });
   }
 }
