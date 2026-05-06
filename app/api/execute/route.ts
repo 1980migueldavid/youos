@@ -10,7 +10,23 @@ export async function POST(req: Request) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      model: "anthropic/claude-3.5-sonnet",
+      model: "openai/gpt-4o-mini",
+      response_format: {
+        type: "json_schema",
+        json_schema: {
+          name: "execution",
+          schema: {
+            type: "object",
+            properties: {
+              goal: { type: "string" },
+              reality: { type: "string" },
+              today: { type: "string" },
+              proof: { type: "string" }
+            },
+            required: ["goal", "reality", "today", "proof"]
+          }
+        }
+      },
       messages: [
         { role: "system", content: EXECUTE_PROMPT },
         { role: "user", content: goal }
@@ -20,29 +36,21 @@ export async function POST(req: Request) {
 
   const data = await response.json();
 
-  const raw: string =
-    data.choices?.[0]?.message?.content ||
-    data.choices?.[0]?.text ||
-    "";
-
-  // 🔥 JSON extrahieren, selbst wenn Modell Müll drumherum schreibt
-  const match = raw.match(/\{[\s\S]*\}/);
+  const content =
+    data.choices?.[0]?.message?.content;
 
   try {
-    const parsed = JSON.parse(match ? match[0] : raw);
+    const parsed = typeof content === "string"
+      ? JSON.parse(content)
+      : content;
 
-    return Response.json({
-      goal: parsed.goal || "",
-      reality: parsed.reality || "",
-      today: parsed.today || "",
-      proof: parsed.proof || ""
-    });
+    return Response.json(parsed);
   } catch (e) {
     return Response.json({
       goal: "ERROR",
-      reality: "Model did not return valid JSON",
-      today: raw,
-      proof: "Fix prompt / model output"
+      reality: "Parsing failed",
+      today: JSON.stringify(content),
+      proof: "Check model response"
     });
   }
 }
